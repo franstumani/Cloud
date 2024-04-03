@@ -1,7 +1,7 @@
 package com.hendisantika.springbootrestapipostgresql.controller;
 
-import com.hendisantika.springbootrestapipostgresql.entity.Book;
-import com.hendisantika.springbootrestapipostgresql.repository.BookRepository;
+import com.hendisantika.springbootrestapipostgresql.entity.Author;
+import com.hendisantika.springbootrestapipostgresql.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +37,7 @@ public class AuthorRestController {
 
     @PostMapping
     public ResponseEntity<?> addAuthor(@RequestBody Author author) {
-        return new ResponseEntity<>(repository.save(book), HttpStatus.CREATED);
+        return new ResponseEntity<>(repository.save(author), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -59,14 +59,17 @@ public class AuthorRestController {
     public ResponseEntity<Author> updateAuthorFromDB(@PathVariable("id") long id, @RequestBody Author author) {
 
         Optional<Author> currentAuthorOpt = repository.findById(id);
-        Author currentAuthor = currentAuthor.get();
-        currentAuthor.setName(author.getName());
-        currentAuthor.setDescription(author.getDescription());
-        currentAuthor.setTags(author.getTags());
+        if (currentAuthorOpt.isPresent()) {
+            Author currentAuthor = currentAuthorOpt.get();
+            currentAuthor.setName(author.getName());
+            currentAuthor.setDescription(author.getDescription());
+            currentAuthor.setTags(author.getTags());
 
-        return new ResponseEntity<>(repository.save(currentAuthor), HttpStatus.OK);
+            return new ResponseEntity<>(repository.save(currentAuthor), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
-
     @DeleteMapping("/{id}")
     public void deleteAuthorWithId(@PathVariable Long id) {
         repository.deleteById(id);
