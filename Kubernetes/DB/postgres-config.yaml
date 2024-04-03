@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: greisi
+  POSTGRES_USER: greisi
+  POSTGRES_PASSWORD: Chochang8
+
+# kubectl apply -f postgres-config.yaml
